@@ -3,12 +3,24 @@
     <ScrollView>
       <div>
         <Banner :banners="banners"></Banner>
-        <Personalized :personalized="personalized" :title="'推荐歌单'" @select="fatherSelectItem"></Personalized>
-        <Personalized :personalized="albums" :title="'最新专辑'"></Personalized>
+        <Personalized
+          :personalized="personalized"
+          :type="'personalized'"
+          :title="'推荐歌单'"
+          @select="fatherSelectItem"
+        ></Personalized>
+        <Personalized
+          :personalized="albums"
+          :type="'album'"
+          :title="'最新专辑'"
+          @select="fatherSelectItem"
+        ></Personalized>
         <SongList :songs="songs"></SongList>
       </div>
     </ScrollView>
-    <router-view></router-view>
+    <transition>
+      <router-view></router-view>
+    </transition>
   </div>
 </template>
 
@@ -43,10 +55,10 @@ export default {
   },
 
   methods: {
-    fatherSelectItem (id) {
+    fatherSelectItem(id, type) {
       this.$router.push({
-        path: `/recommend/detail/${id}`
-      })
+        path: `/recommend/detail/${id}/${type}`
+      });
     }
   },
 
@@ -95,5 +107,29 @@ export default {
   right: 0;
   bottom: 0;
   overflow: hidden;
+}
+
+.v-enter {
+  transform: translateX(100%);
+}
+
+.v-enter-to {
+  transform: translateX(0%);
+}
+
+.v-enter-active {
+  transition: transform 0.25s;
+}
+
+.v-leave {
+  transform: translateX(0%);
+}
+
+.v-leave-to {
+  transform: translateX(100%);
+}
+
+.v-leave-active {
+  transition: transform 0.25s;
 }
 </style>

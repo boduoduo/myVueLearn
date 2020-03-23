@@ -1,14 +1,14 @@
 <template>
   <div class="header" @click="changeTheme">
-      <div class="header-left"></div>
-      <div class="header-title">网易云音乐</div>
+      <div class="header-left" @click.stop="back"></div>
+      <div class="header-title">{{title}}</div>
       <div class="header-right"></div>
   </div>
 </template>
 
 <script>
 export default {
-    name: 'Header',
+    name: 'SubHeader',
     data() {
         return {
             themes: ["theme","theme1","theme2"],
@@ -22,8 +22,19 @@ export default {
                 this.index = 0
             }
             document.documentElement.setAttribute("data-theme", this.themes[this.index])
+        },
+
+        back () {
+            window.history.back()
         }
     },
+    props: {
+        title: {
+            type: String,
+            default: '',
+            required: true
+        }
+    }
 }
 </script>
 
@@ -33,6 +44,8 @@ export default {
 @import '../assets/css/mixin';
 
 .header {
+    position: relative;
+    z-index: 999;
     width: 100%;
     height: 100px;
     @include bg_color();
@@ -45,17 +58,18 @@ export default {
         margin-top: 8px;
     }
     .header-left {
-        @include bg_img('../assets/images/logo');
+        @include bg_img('../assets/images/back');
     }
     .header-right {
-        @include bg_img('../assets/images/account');
+        @include bg_img('../assets/images/more');
     }
     .header-title {
         text-align: center;
         line-height: 100px;
         color: white;
         font-weight: bold;
-        @include font_size($font_medium)
+        @include font_size($font_medium);
+        @include no-wrap();
     }
 }
 

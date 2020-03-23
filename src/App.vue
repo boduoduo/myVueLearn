@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header></Header>
+    <Header :title="'网易云音乐'"></Header>
     <Tabbar></Tabbar>
     <router-view></router-view>
   </div>
@@ -30,7 +30,7 @@ export default {
 };
 </script>
 
-<style scope lang="scss">
+<style scoped lang="scss">
 @import "./assets/css/variable";
 
 .theme {

@@ -11,7 +11,8 @@ export default {
   mounted() {
     this.iscroll = new IScroll(this.$refs.wrapper, {
       mouseWheel: true,
-      scrollbars: true,
+      scrollbars: false,
+      probeType: 3,
       // 解决拖拽卡顿的问题
       scrollX: false,
       scrollY: true,
@@ -34,11 +35,20 @@ export default {
     };
     // 监听那个节点
     observer.observe(this.$refs.wrapper, config);
-  }
+  },
+
+  methods: {
+    // 监听scrollView的滚动事件，给外界使用
+    scrolling (fn) {
+      this.iscroll.on('scroll', function () {
+        fn(this.y)
+      })
+    }
+  },
 };
 </script>
 
-<style scope>
+<style scoped>
 #wrapper {
   width: 100%;
   height: 100%;
