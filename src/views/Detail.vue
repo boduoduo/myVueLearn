@@ -62,8 +62,10 @@ export default {
     let defaultHeight = this.$refs.headerImg.$el.offsetHeight;
     this.$refs.scrollview.scrolling(offsetY => {
       if (offsetY < 0) {
-        let blur = (15 * Math.abs(offsetY)) / defaultHeight;
-        this.$refs.headerImg.$el.style.filter = `blur(${blur}px)`;
+        let opacity =  Math.abs(offsetY) / defaultHeight;
+        // 高斯模糊在移动端非常消耗性能，不建议在移动端使用
+        // this.$refs.headerImg.$el.style.filter = `blur(${blur}px)`;
+        this.$refs.headerImg.changeMaskAlpha(opacity)
       } else {
         let scale = 1 + offsetY / defaultHeight;
         this.$refs.headerImg.$el.style.transform = `scale(${scale})`;

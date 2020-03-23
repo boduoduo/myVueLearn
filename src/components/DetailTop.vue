@@ -2,6 +2,7 @@
   <div class="detail-top">
       <div class="img-container">
           <img :src="path" alt="">
+          <div class="mask" ref="mask"></div>
       </div>
   </div>
 </template>
@@ -15,7 +16,13 @@ export default {
             default: '',
             required: true
         }
-    }
+    },
+
+    methods: {
+        changeMaskAlpha(opacity) {
+            this.$refs.mask.style.opacity = opacity;
+        }
+    },
 }
 </script>
 
@@ -28,6 +35,15 @@ export default {
         position: relative;
         img {
             width: 100%;
+        }
+        .mask {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            background-color: #000;
         }
     }
 }
