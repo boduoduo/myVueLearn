@@ -40,8 +40,8 @@ export default {
 
 <style scoped lang='scss'>
 
-@import '../assets/css/variable';
-@import '../assets/css/mixin';
+@import '../../assets/css/variable';
+@import '../../assets/css/mixin';
 
 .header {
     position: relative;
@@ -58,10 +58,10 @@ export default {
         margin-top: 8px;
     }
     .header-left {
-        @include bg_img('../assets/images/back');
+        @include bg_img('../../assets/images/back');
     }
     .header-right {
-        @include bg_img('../assets/images/more');
+        @include bg_img('../../assets/images/more');
     }
     .header-title {
         text-align: center;

@@ -61,7 +61,7 @@ export default {
 
 <style lang="scss">
 // 要修改swiper的样式，style不能是scope的，需要写在全局样式里面
-@import "../assets/css/mixin";
+@import "../../assets/css/mixin";
 
 .banner {
   .swiper-pagination-bullet {

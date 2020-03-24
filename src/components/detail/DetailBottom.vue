@@ -25,8 +25,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../assets/css/variable';
-@import '../assets/css/mixin';
+@import '../../assets/css/variable';
+@import '../../assets/css/mixin';
 
 .detail-bottom {
     width: 100%;
@@ -46,7 +46,7 @@ export default {
         .bottom-icon {
             width: 50px;
             height: 50px;
-            @include bg_img('../assets/images/small_play');
+            @include bg_img('../../assets/images/small_play');
             margin-right: 20px;
         }
         .bottom-title {

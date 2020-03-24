@@ -3,12 +3,14 @@
     <Header :title="'网易云音乐'"></Header>
     <Tabbar></Tabbar>
     <router-view></router-view>
+    <Player></Player>
   </div>
 </template>
 
 <script>
 import Header from './components/Header'
 import Tabbar from './components/Tabbar'
+import Player from './views/Player'
 
 export default {
   name: "App",
@@ -19,7 +21,8 @@ export default {
   },
   components: {
     Header,
-    Tabbar
+    Tabbar,
+    Player
   },
 
   methods: {
