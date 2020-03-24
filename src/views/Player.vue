@@ -1,8 +1,8 @@
 <template>
   <div class="player">
     <NormalPlayer></NormalPlayer>
-    <MiniPlayer></MiniPlayer>
-    <ListPlayer></ListPlayer>
+    <MiniPlayer @showList="showList"></MiniPlayer>
+    <ListPlayer ref="listPlayer"></ListPlayer>
   </div>
 </template>
 
@@ -13,6 +13,11 @@ import ListPlayer from '../components/player/ListPlayer'
 
 export default {
   name: "Player",
+  methods: {
+    showList () {
+      this.$refs.listPlayer.show()
+    }
+  },
   components: {
     NormalPlayer,
     MiniPlayer,
