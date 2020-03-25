@@ -1,58 +1,100 @@
 <template>
-  <div class="list-player" v-show="isShow">
-    <div class="player-wrapper">
-      <div class="player-top">
-        <div class="top-left">
-          <div class="mode"></div>
-          <p>顺序播放</p>
+  <transition :css="false" @enter="enter" @leave="leave">
+    <div class="list-player" v-show="isShow">
+      <div class="player-wrapper">
+        <div class="player-top">
+          <div class="top-left">
+            <div class="mode"></div>
+            <p>顺序播放</p>
+          </div>
+          <div class="top-right">
+            <div class="del"></div>
+          </div>
         </div>
-        <div class="top-right">
-          <div class="del"></div>
+        <div class="player-middle">
+          <ScrollView>
+            <ul>
+              <li class="item">  
+                <div class="item-left">
+                  <div class="item-play" @click="play" ref="play"></div>
+                  <p>演员</p>
+                </div>
+                <div class="item-right">
+                  <div class="item-favorite"></div>
+                  <div class="item-del"></div>
+                </div>
+              </li>
+            </ul>
+          </ScrollView>
         </div>
-      </div>
-      <div class="player-middle">
-        <ScrollView>
-          <ul>
-            <li class="item">
-              <div class="item-left">
-                <div class="item-play"></div>
-                <p>演员</p>
-              </div>
-              <div class="item-right">
-                <div class="item-favorite"></div>
-                <div class="item-del"></div>
-              </div>
-            </li>
-          </ul>
-        </ScrollView>
-      </div>
-      <div class="player-bottom">
+        <div class="player-bottom">
           <p @click="hidden">关闭</p>
+        </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
 import ScrollView from "../../components/ScrollView";
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
   name: "ListPlayer",
   data() {
-      return {
-          isShow: false,
-      }
+    return {
+      isShow: false
+    };
   },
   methods: {
-      show () {
-          this.isShow = true;
-      },
-      hidden () {
-          this.isShow = false;
-      }
+    ...mapActions([
+        'setIsPlaying'
+    ]),
+
+    show() {
+      this.isShow = true;
+    },
+    hidden() {
+      this.isShow = false;
+    },
+    // 入场动画
+    enter(el, done) {
+      Velocity(el, "transition.perspectiveUpIn", { duration: 300 }, function() {
+        done();
+      });
+    },
+    // 离开动画
+    leave(el, done) {
+      Velocity(el, "transition.perspectiveUpOut", { duration: 300 }, function() {
+        done();
+      });
+    },
+
+    play () {
+        this.setIsPlaying(!this.isPlaying)
+    }
+
   },
   components: {
     ScrollView
+  },
+
+  computed: {
+      ...mapGetters([
+          'isPlaying'
+      ])
+  },
+
+  watch: {
+    isPlaying(newValue, oldValue) {
+      if (newValue) {
+        this.$refs.play.classList.add("active");
+      } else {
+        this.$refs.play.classList.remove("active");
+      }
+    }
   }
+
 };
 </script>
 
@@ -110,7 +152,10 @@ export default {
         .item-play {
           width: 56px;
           height: 56px;
-          @include bg_img("../../assets/images/small_play");
+          @include bg_img("../../assets/images/small_pause");
+          &.active {
+              @include bg_img("../../assets/images/small_play");
+          }
         }
         p {
           @include font_color();
@@ -136,15 +181,15 @@ export default {
     }
   }
   .player-bottom {
-      width: 100%;
-      height: 100px;
-      line-height: 100px;
-      @include bg_color();
-      p {
-          text-align: center;
-          color: white;
-          @include font_size($font_medium)
-      }
+    width: 100%;
+    height: 100px;
+    line-height: 100px;
+    @include bg_color();
+    p {
+      text-align: center;
+      color: white;
+      @include font_size($font_medium);
+    }
   }
 }
 </style>
