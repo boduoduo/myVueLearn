@@ -1,7 +1,7 @@
 <template>
   <swiper ref="mySwiper" :options="swiperOptions" class="banner">
     <swiper-slide class="cd">
-      <div class="cd-wrapper">
+      <div class="cd-wrapper" ref="cdWrapper">
         <img
           src="https://p2.music.126.net/OZUXgQ9GB6bYJyEQ38p0Pw==/109951164746809287.jpg"
           alt=""
@@ -12,56 +12,7 @@
     <swiper-slide class="lyric">
       <ScrollView>
         <ul>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
-          <li>我是歌词</li>
+          <li v-for="value in lyrics" :key="value.id">我是歌词{{value.msg}}</li>
         </ul>
       </ScrollView>
     </swiper-slide>
@@ -73,11 +24,13 @@
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import "swiper/dist/css/swiper.css";
 import ScrollView from "../../components/ScrollView";
+import { mapGetters } from 'vuex'
 
 export default {
   name: "PlayerMiddle",
   data() {
     return {
+      lyrics: [],
       swiperOptions: {
         pagination: {
           el: ".swiper-pagination",
@@ -90,11 +43,36 @@ export default {
       }
     };
   },
+  created() {
+    for (let i = 0; i<50; i++) {
+      let obj = {
+        id: i,
+        msg: i
+      }
+      this.lyrics.push(obj)
+    }
+  },
   components: {
     swiper,
     swiperSlide,
     ScrollView
-  }
+  },
+
+  computed: {
+    ...mapGetters([
+      'isPlaying'
+    ])
+  },
+
+  watch: {
+    isPlaying(newValue, oldValue) {
+      if (newValue) {
+        this.$refs.cdWrapper.classList.add('active')
+      }else {
+        this.$refs.cdWrapper.classList.remove('active')
+      }
+    }
+  },
 };
 </script>
 
@@ -116,6 +94,11 @@ export default {
       border-radius: 50%;
       border: 10px solid white;
       overflow: hidden;
+      animation: sport 4s linear infinite;
+      animation-play-state: paused;
+      &.active {
+        animation-play-state: running;
+      }
       img {
         width: 100%;
         height: 100%;
@@ -134,6 +117,15 @@ export default {
       &:last-of-type {
         padding-bottom: 100px;
       }
+    }
+  }
+
+  @keyframes sport {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
     }
   }
 }

@@ -10,4 +10,12 @@ export default {
     isPlaying (state) {
         return state.isPlaying
     },
+
+    modeType (state) {
+        return state.modeType
+    },
+
+    isShowListPlayer (state) {
+        return state.isShowListPlayer
+    }
 }

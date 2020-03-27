@@ -1,11 +1,11 @@
 <template>
   <transition :css="false" @enter="enter" @leave="leave">
-    <div class="list-player" v-show="isShow">
+    <div class="list-player" v-show="isShowListPlayer">
       <div class="player-wrapper">
         <div class="player-top">
           <div class="top-left">
-            <div class="mode"></div>
-            <p>顺序播放</p>
+            <div class="mode loop" @click="setMode" ref="mode"></div>
+            <p>{{modeText}}</p>
           </div>
           <div class="top-right">
             <div class="del"></div>
@@ -14,7 +14,7 @@
         <div class="player-middle">
           <ScrollView>
             <ul>
-              <li class="item">  
+              <li class="item" v-for="value in songs" :key="value.id">
                 <div class="item-left">
                   <div class="item-play" @click="play" ref="play"></div>
                   <p>演员</p>
@@ -37,52 +37,61 @@
 
 <script>
 import ScrollView from "../../components/ScrollView";
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters } from "vuex";
+import mode from '../../store/modeType'
 
 export default {
   name: "ListPlayer",
   data() {
     return {
-      isShow: false
+      modeText: '顺序播放',
+      songs: [{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7}]
     };
   },
   methods: {
-    ...mapActions([
-        'setIsPlaying'
-    ]),
+    ...mapActions(["setIsPlaying", "setModeType", 'setListPlayer']),
 
-    show() {
-      this.isShow = true;
-    },
     hidden() {
-      this.isShow = false;
+      this.setListPlayer(false);
     },
     // 入场动画
     enter(el, done) {
-      Velocity(el, "transition.perspectiveUpIn", { duration: 300 }, function() {
+      Velocity(el, "transition.slideRightIn", { duration: 300 }, function() {
         done();
       });
     },
     // 离开动画
     leave(el, done) {
-      Velocity(el, "transition.perspectiveUpOut", { duration: 300 }, function() {
-        done();
-      });
+      Velocity(
+        el,
+        "transition.slideRightOut",
+        { duration: 300 },
+        function() {
+          done();
+        }
+      );
     },
 
-    play () {
-        this.setIsPlaying(!this.isPlaying)
-    }
+    play() {
+      this.setIsPlaying(!this.isPlaying);
+    },
 
+    setMode() {
+      if (this.modeType === mode.loop) {
+        this.setModeType(mode.one);
+      } else if (this.modeType === mode.one) {
+        this.setModeType(mode.random);
+      } else if (this.modeType === mode.random) {
+        this.setModeType(mode.loop);
+      }
+    }
   },
   components: {
     ScrollView
   },
 
   computed: {
-      ...mapGetters([
-          'isPlaying'
-      ])
+    ...mapGetters(["isPlaying", "modeType", 'isShowListPlayer'])
   },
 
   watch: {
@@ -92,9 +101,23 @@ export default {
       } else {
         this.$refs.play.classList.remove("active");
       }
+    },
+    modeType(newValue, oldValue) {
+      this.$refs.mode.classList.remove("loop");
+      this.$refs.mode.classList.remove("one");
+      this.$refs.mode.classList.remove("random");
+      if (newValue === mode.loop) {
+        this.$refs.mode.classList.add("loop");
+        this.modeText = '循环播放'
+      } else if (newValue === mode.one) {
+        this.$refs.mode.classList.add("one");
+        this.modeText = '单曲循环'
+      } else if (newValue === mode.random) {
+        this.$refs.mode.classList.add("random");
+        this.modeText = '随机播放'
+      }
     }
   }
-
 };
 </script>
 
@@ -122,7 +145,16 @@ export default {
         width: 56px;
         height: 56px;
         margin-right: 20px;
-        @include bg_img("../../assets/images/small_loop");
+        &.loop {
+          @include bg_img("../../assets/images/small_loop");
+        }
+        &.one {
+          @include bg_img("../../assets/images/small_one");
+        }
+        &.random {
+          @include bg_img("../../assets/images/small_shuffle");
+        }
+        
       }
       p {
         @include font_color();
@@ -152,9 +184,9 @@ export default {
         .item-play {
           width: 56px;
           height: 56px;
-          @include bg_img("../../assets/images/small_pause");
+          @include bg_img("../../assets/images/small_play");
           &.active {
-              @include bg_img("../../assets/images/small_play");
+            @include bg_img("../../assets/images/small_pause");
           }
         }
         p {

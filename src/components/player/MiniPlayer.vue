@@ -3,7 +3,7 @@
     <div class="mini-player" v-show="this.isShowMiniPlayer">
       <div class="player-wrapper">
         <div class="player-left" @click="showNormalPlayer">
-          <img
+          <img ref="cd"
             src="https://p2.music.126.net/OZUXgQ9GB6bYJyEQ38p0Pw==/109951164746809287.jpg"
             alt=""
           />
@@ -29,9 +29,9 @@ import "velocity-animate/velocity.ui";
 export default {
   name: "MiniPlayer",
   methods: {
-    ...mapActions(["setFullScreen", "setMiniPlayer", "setIsPlaying"]),
+    ...mapActions(["setFullScreen", "setMiniPlayer", "setIsPlaying", 'setListPlayer']),
     showList() {
-      this.$emit("showList");
+      this.setListPlayer(true)
     },
     showNormalPlayer() {
       this.setFullScreen(true);
@@ -63,8 +63,10 @@ export default {
     isPlaying(newValue, oldValue) {
       if (newValue) {
         this.$refs.play.classList.add("active");
+        this.$refs.cd.classList.add('active')
       } else {
         this.$refs.play.classList.remove("active");
+        this.$refs.cd.classList.remove('active')
       }
     }
   }
@@ -94,6 +96,11 @@ export default {
         width: 100px;
         height: 100px;
         border-radius: 50%;
+        animation: sport 4s linear infinite;
+        animation-play-state: paused;
+        &.active {
+          animation-play-state: running;
+        }
       }
       .player-title {
         display: flex;
@@ -116,9 +123,9 @@ export default {
       .play {
         width: 84px;
         height: 84px;
-        @include bg_img("../../assets/images/pause");
+        @include bg_img("../../assets/images/play");
         &.active {
-            @include bg_img("../../assets/images/play");
+            @include bg_img("../../assets/images/pause");
         }
       }
       .list {
@@ -126,6 +133,15 @@ export default {
         height: 100px;
         @include bg_img("../../assets/images/list");
       }
+    }
+  }
+
+  @keyframes sport {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
     }
   }
 }

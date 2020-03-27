@@ -12,3 +12,5 @@ export const getNewestSong = () => Network.mb_get('/personalized/newsong')
 export const getPlayList = (data) => Network.mb_get('/playlist/detail', data)
 // 获取专辑详情
 export const getAlbumDetail = (data) => Network.mb_get('/album', data)
+// 获取歌曲详情
+export const getSongDetail = (data) => Network.mb_get('/song/detail', data)

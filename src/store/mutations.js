@@ -1,4 +1,4 @@
-import { SET_FULL_SCREEN, SET_MINI_PLAYER, SET_IS_PLAYING } from "./mutations-type";
+import { SET_FULL_SCREEN, SET_MINI_PLAYER, SET_IS_PLAYING, SET_MODE_TYPE, SET_LIST_PLAYER } from "./mutations-type";
 
 export default {
   // 字符串当方法名，需加上[]
@@ -13,4 +13,13 @@ export default {
   [SET_IS_PLAYING](state, flag) {
     state.isPlaying = flag;
   },
+
+  [SET_MODE_TYPE](state, type) {
+    state.modeType = type
+  },
+
+  [SET_LIST_PLAYER](state, flag) {
+    state.isShowListPlayer = flag;
+  },
+
 };
