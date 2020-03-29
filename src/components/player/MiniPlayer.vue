@@ -1,15 +1,15 @@
 <template>
   <transition :css="false" @enter="enter" @leave="leave">
-    <div class="mini-player" v-show="this.isShowMiniPlayer">
+    <div class="mini-player" v-show="isShowMiniPlayer">
       <div class="player-wrapper">
         <div class="player-left" @click="showNormalPlayer">
           <img ref="cd"
-            src="https://p2.music.126.net/OZUXgQ9GB6bYJyEQ38p0Pw==/109951164746809287.jpg"
+            :src="currentSong.picUrl"
             alt=""
           />
           <div class="player-title">
-            <h3>演员</h3>
-            <p>薛子谦</p>
+            <h3>{{currentSong.name}}</h3>
+            <p>{{currentSong.singer}}</p>
           </div>
         </div>
         <div class="player-right">
@@ -56,7 +56,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["isShowMiniPlayer", "isPlaying"])
+    ...mapGetters(["isShowMiniPlayer", "isPlaying", 'currentSong'])
   },
 
   watch: {
@@ -105,8 +105,8 @@ export default {
       .player-title {
         display: flex;
         flex-direction: column;
-        align-items: center;
         justify-content: center;
+        margin-left: 20px;
         h3 {
           @include font_color();
           @include font_size($font_medium);

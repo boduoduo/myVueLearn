@@ -2,17 +2,18 @@
   <swiper ref="mySwiper" :options="swiperOptions" class="banner">
     <swiper-slide class="cd">
       <div class="cd-wrapper" ref="cdWrapper">
-        <img
-          src="https://p2.music.126.net/OZUXgQ9GB6bYJyEQ38p0Pw==/109951164746809287.jpg"
-          alt=""
-        />
+        <img :src="currentSong.picUrl" alt />
       </div>
-      <p>adadafakfaf</p>
+      <p>{{getFirstLyric()}}</p>
     </swiper-slide>
-    <swiper-slide class="lyric">
-      <ScrollView>
+    <swiper-slide class="lyric" ref="lyric">
+      <ScrollView ref="scrollView">
         <ul>
-          <li v-for="value in lyrics" :key="value.id">我是歌词{{value.msg}}</li>
+          <li
+            v-for="(value, key) in currentLyric"
+            :key="key"
+            :class="{'active' : currentKey === key}"
+          >{{value}}</li>
         </ul>
       </ScrollView>
     </swiper-slide>
@@ -24,13 +25,13 @@
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import "swiper/dist/css/swiper.css";
 import ScrollView from "../../components/ScrollView";
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 
 export default {
   name: "PlayerMiddle",
   data() {
     return {
-      lyrics: [],
+      currentKey: "0",
       swiperOptions: {
         pagination: {
           el: ".swiper-pagination",
@@ -43,15 +44,17 @@ export default {
       }
     };
   },
-  created() {
-    for (let i = 0; i<50; i++) {
-      let obj = {
-        id: i,
-        msg: i
-      }
-      this.lyrics.push(obj)
+
+  props: {
+    currentTime: {
+      type: Number,
+      default: 0,
+      required: true
     }
   },
+
+  created() {},
+
   components: {
     swiper,
     swiperSlide,
@@ -59,20 +62,64 @@ export default {
   },
 
   computed: {
-    ...mapGetters([
-      'isPlaying'
-    ])
+    ...mapGetters(["isPlaying", "currentSong", "currentLyric"])
   },
 
   watch: {
     isPlaying(newValue, oldValue) {
       if (newValue) {
-        this.$refs.cdWrapper.classList.add('active')
-      }else {
-        this.$refs.cdWrapper.classList.remove('active')
+        this.$refs.cdWrapper.classList.add("active");
+      } else {
+        this.$refs.cdWrapper.classList.remove("active");
+      }
+    },
+
+    currentTime(newValue, oldValue) {
+      // 高亮歌词同步
+      let lineNum = Math.floor(newValue)
+      this.currentKey = this.getActiveLineNum(lineNum);
+      // 歌词滚动同步
+      let currentLyricTop = document.querySelector("li.active").offsetTop;
+      let lyricHeight = this.$refs.lyric.$el.offsetHeight;
+      if (currentLyricTop > lyricHeight / 2) {
+        this.$refs.scrollView.scrollTo(
+          0,
+          lyricHeight / 2 - currentLyricTop,
+          200
+        );
+      } else {
+        this.$refs.scrollView.scrollTo(0, 0, 200);
+      }
+    },
+
+    currentLyric (newValue, oldValue) {
+      for (const key in newValue) {
+        this.currentKey = key
+        return
       }
     }
   },
+
+  methods: {
+    getFirstLyric() {
+      for (const key in this.currentLyric) {
+        return this.currentLyric[key];
+      }
+    },
+
+    getActiveLineNum(lineNum) {
+      if (lineNum <= 0) {
+        return this.currentKey
+      }
+      let result = this.currentLyric[lineNum + ""];
+      if (result === undefined || result === "") {
+        lineNum--;
+        return this.getActiveLineNum(lineNum);
+      } else {
+        return lineNum + "";
+      }
+    }
+  }
 };
 </script>
 
@@ -94,7 +141,7 @@ export default {
       border-radius: 50%;
       border: 10px solid white;
       overflow: hidden;
-      animation: sport 4s linear infinite;
+      animation: sport 8s linear infinite;
       animation-play-state: paused;
       &.active {
         animation-play-state: running;
@@ -114,8 +161,14 @@ export default {
   .lyric {
     li {
       text-align: center;
+      margin: 10px 0;
+      @include font_color();
+      @include font_size($font_medium);
       &:last-of-type {
-        padding-bottom: 100px;
+        padding-bottom: 52%;
+      }
+      &.active {
+        color: white;
       }
     }
   }

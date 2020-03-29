@@ -8,20 +8,20 @@
             <p>{{modeText}}</p>
           </div>
           <div class="top-right">
-            <div class="del"></div>
+            <div class="del" @click="delAll"></div>
           </div>
         </div>
         <div class="player-middle">
-          <ScrollView>
-            <ul>
-              <li class="item" v-for="value in songs" :key="value.id">
+          <ScrollView ref="scrollView">
+            <ul ref="play">
+              <li class="item" v-for="(value, index) in songs" :key="value.id" @click="selectMusic(index)">
                 <div class="item-left">
-                  <div class="item-play" @click="play" ref="play"></div>
-                  <p>演员</p>
+                  <div class="item-play" @click.stop="play" v-show="currentIndex === index"></div>
+                  <p>{{value.name}}</p>
                 </div>
                 <div class="item-right">
-                  <div class="item-favorite"></div>
-                  <div class="item-del"></div>
+                  <div class="item-favorite" @click.stop="favorite(value)" :class="{'active' : isFavorite(value)}"></div>
+                  <div class="item-del" @click.stop="del(index)"></div>
                 </div>
               </li>
             </ul>
@@ -45,11 +45,28 @@ export default {
   data() {
     return {
       modeText: '顺序播放',
-      songs: [{id:1},{id:2},{id:3},{id:4},{id:5},{id:6},{id:7}]
     };
   },
+   computed: {
+    ...mapGetters([
+        "isPlaying", 
+        "modeType", 
+        'isShowListPlayer', 
+        'songs', 
+        'currentIndex',
+        'favoriteList'
+        ])
+  },
+
   methods: {
-    ...mapActions(["setIsPlaying", "setModeType", 'setListPlayer']),
+    ...mapActions([
+        "setIsPlaying", 
+        "setModeType", 
+        'setListPlayer', 
+        'setDelSong',
+        'setCurrentIndex',
+        'setFavoriteSong'
+        ]),
 
     hidden() {
       this.setListPlayer(false);
@@ -84,14 +101,33 @@ export default {
       } else if (this.modeType === mode.random) {
         this.setModeType(mode.loop);
       }
+    },
+
+    del(index) {
+      this.setDelSong(index)
+    },
+
+    delAll () {
+       this.setDelSong()
+    },
+
+    selectMusic(index) {
+        this.setCurrentIndex(index)
+    },
+
+    favorite (value) {
+        this.setFavoriteSong(value)
+    },
+
+    isFavorite (value) {
+        let result = this.favoriteList.find(curSong => {
+            return curSong.id === value.id
+        })
+        return result !== undefined
     }
   },
   components: {
     ScrollView
-  },
-
-  computed: {
-    ...mapGetters(["isPlaying", "modeType", 'isShowListPlayer'])
   },
 
   watch: {
@@ -116,6 +152,10 @@ export default {
         this.$refs.mode.classList.add("random");
         this.modeText = '随机播放'
       }
+    },
+
+    isShowListPlayer(newValue, oldValue) {
+        this.$refs.scrollView.refresh()
     }
   }
 };
@@ -170,6 +210,17 @@ export default {
     }
   }
   .player-middle {
+      height: 700px;
+      overflow: hidden;
+      ul {
+          &.active {
+              .item {
+                .item-play {
+                    @include bg_img("../../assets/images/small_pause");
+                }
+              }
+          }
+      }
     .item {
       border-top: 1px solid #ccc;
       display: flex;
@@ -185,13 +236,11 @@ export default {
           width: 56px;
           height: 56px;
           @include bg_img("../../assets/images/small_play");
-          &.active {
-            @include bg_img("../../assets/images/small_pause");
-          }
         }
         p {
           @include font_color();
           @include font_size($font_medium_s);
+          @include no_wrap();
           margin-left: 20px;
         }
       }
@@ -201,7 +250,10 @@ export default {
         .item-favorite {
           width: 56px;
           height: 56px;
-          @include bg_img("../../assets/images/small_favorite");
+          @include bg_img("../../assets/images/small_un_favorite");
+          &.active {
+            @include bg_img("../../assets/images/small_favorite");
+          }
         }
         .item-del {
           width: 52px;

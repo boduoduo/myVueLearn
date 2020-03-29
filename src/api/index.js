@@ -3,7 +3,7 @@ import Network from './mbnetwork'
 // 获取Banner数据
 export const getMyBanner = () => Network.mb_get('/banner?type=2')
 // 获取推荐歌单
-export const getPersonalized = () => Network.mb_get('/personalized?limit=6')
+export const getPersonalized = () => Network.mb_get('/personalized?limit=12')
 // 获取最新专辑
 export const getNewestAlbum = () => Network.mb_get('/album/newest')
 // 获取最新歌单
@@ -14,3 +14,7 @@ export const getPlayList = (data) => Network.mb_get('/playlist/detail', data)
 export const getAlbumDetail = (data) => Network.mb_get('/album', data)
 // 获取歌曲详情
 export const getSongDetail = (data) => Network.mb_get('/song/detail', data)
+// 获取歌词
+export const getSongLyric = (data) => Network.mb_get('/lyric', data)
+// 获取歌曲播放地址
+export const getSongURL = (data) => Network.mb_get('/song/url', data)
