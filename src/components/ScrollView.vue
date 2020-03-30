@@ -27,7 +27,7 @@ export default {
     let observer = new MutationObserver((mutationList, observer) => {
       this.iscroll.refresh();
     });
-    // 高速观察者观察哪些对象
+    // 告诉观察者观察哪些对象
     let config = {
       childList: true, // 观察目标子节点的变化，添加或者删除
       subtree: true, // 默认为false，设置为true， 可以观察后代节点
@@ -62,5 +62,6 @@ export default {
 #wrapper {
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 </style>

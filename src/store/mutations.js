@@ -9,7 +9,10 @@ import {
   SET_DEL_SONG,
   SET_CURRENT_INDEX,
   SET_CURRENT_PLAY_TIME,
-  SET_FAVORITE_SONG
+  SET_FAVORITE_SONG,
+  SET_FAVORITE_LIST,
+  SET_HISTORY_SONG,
+  SET_HISTORY_LIST
  } from "./mutations-type";
 import { stat } from "fs";
 
@@ -87,6 +90,32 @@ export default {
     if (result === undefined) {
       state.favoriteList.push(song)
     }
+  },
+
+  [SET_FAVORITE_LIST](state, list) {
+    if (list === null) {
+      return
+    }
+    state.favoriteList = list
+  },
+
+  [SET_HISTORY_SONG](state, song) {
+    let result = state.historyList.find((currentSong) => {
+        return currentSong.id === song.id
+    })
+    if (result === undefined) {
+      if (state.historyList.length > 30) {
+        state.historyList.splice(0, 1)
+      }
+      state.historyList.push(song)
+    }
+  },
+
+  [SET_HISTORY_LIST](state, list) {
+    if (list === null) {
+      return
+    }
+    state.historyList = list
   },
   
 };

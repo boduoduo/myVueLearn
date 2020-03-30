@@ -49,6 +49,11 @@ export default {
 
     favoriteList (state) {
         return state.favoriteList
+    },
+
+    historyList (state) {
+        return state.historyList
     }
+
 
 }

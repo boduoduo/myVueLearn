@@ -49,7 +49,7 @@ export default {
           this.playlist = {
             name: data.album.name,
             coverImgUrl: data.album.picUrl,
-            tracks: data.album.songs
+            tracks: data.songs
           }
         })
         .catch(error => {

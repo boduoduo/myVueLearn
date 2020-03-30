@@ -11,5 +11,6 @@ export default {
   currentIndex: 0,
   currentLyric: {},
   currentPlayTime: 0, // 当前播放时间
-  favoriteList: []  // 收藏的歌曲
+  favoriteList: [],  // 收藏的歌曲
+  historyList: []     // 播放历史
 };
