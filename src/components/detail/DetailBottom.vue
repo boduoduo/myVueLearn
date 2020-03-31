@@ -78,6 +78,7 @@ export default {
     .item {
         height: 120px;
         h3 {
+            @include no_wrap();
             @include font_color();
             @include font_size($font_medium);
         }

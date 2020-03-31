@@ -75,7 +75,9 @@ export default {
     },
 
     currentIndex(newValue, oldValue) {
-      this.$refs.audio.oncanplay = () => {
+      // 在iOS系统中，不会自动加载歌曲，所以oncanplay永远都不会被执行,
+      // 但是在pc端和Andriod端可以执行，所以通过ondurationchange监听时长的改变来解决
+      this.$refs.audio.ondurationchange = () => {
         this.totalTime = this.$refs.audio.duration
         if (this.isPlaying) {
           this.setHistorySong(this.currentSong)
@@ -114,7 +116,7 @@ export default {
   },
 
   mounted() {
-    this.$refs.audio.oncanplay = () => {
+    this.$refs.audio.ondurationchange = () => {
       this.totalTime = this.$refs.audio.duration
     }
   },

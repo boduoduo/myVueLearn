@@ -17,7 +17,7 @@
 <script>
 import ScrollView from "../ScrollView";
 import SongListItem from "../SongListItem";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "AccountBottom",
@@ -35,21 +35,25 @@ export default {
   },
 
   methods: {
-    ...mapActions(["setSongDetail", "setFullScreen"]),
+    ...mapActions(["setSongDetail", "setFullScreen", 'setCurrentIndex']),
+    ...mapMutations(['SET_SONG_DETAIL']),
 
     selectAllMusic() {
-      this.setFullScreen(true);
-      let ids = [];
+    //   let ids = [];
       if (this.switchedNum === 0) {
-        ids = this.favoriteList.map(item => {
-          return item.id;
-        });
+        // ids = this.favoriteList.map(item => {
+        //   return item.id;
+        // });
+        this.SET_SONG_DETAIL(this.favoriteList)
       } else {
-        ids = this.historyList.map(item => {
-          return item.id;
-        });
+        // ids = this.historyList.map(item => {
+        //   return item.id;
+        // });
+        this.SET_SONG_DETAIL(this.historyList)
       }
-      this.setSongDetail(ids);
+    //   this.setSongDetail(ids);
+        this.setFullScreen(true)
+        this.setCurrentIndex(0)
     }
   },
 
@@ -97,6 +101,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
+    overflow: hidden;
   }
 }
 </style>
