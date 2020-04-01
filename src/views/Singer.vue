@@ -10,7 +10,7 @@
         >
           <h3 class="group-title">{{ value }}</h3>
           <ul>
-            <li class="group-item" v-for="obj in list[index]" :key="obj.id">
+            <li class="group-item" v-for="obj in list[index]" :key="obj.id" @click="gotoSinger(obj.id)">
               <img v-lazy="obj.img1v1Url" alt="" />
               <p>{{ obj.name }}</p>
             </li>
@@ -22,12 +22,16 @@
       <li
         v-for="(value, index) in keys"
         :key="index"
-        @click="keyDown(index)"
         :class="{ active: currentIndex === index }"
+        @touchstart.stop.prevent="touchstart"
+        @touchmove.stop.prevent="touchmove"
+        :data-index="index"
       >
         {{ value }}
       </li>
     </ul>
+    <div class="fix-title" v-show="fixTitle !== ''" ref="fixTitle">{{fixTitle}}</div>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -43,28 +47,100 @@ export default {
       list: [],
       groupTops: [],
       // 当前选中的字母序号
-      currentIndex: 0
+      currentIndex: 0,
+      beginOffsetY: 0,
+      moveOffsetY: 0,
+      scrollY: 0,    // 当前滚动的偏移位
+      fixTitleHeight: 0,
     };
   },
   components: {
     ScrollView
   },
-  mounted() {
+
+  created() {
     getAllArtists()
       .then(result => {
-        this.keys = result.keys;
-        this.list = result.list;
+        this.keys = result.keys
+        this.list = result.list
       })
       .catch(err => {
-        console.log(err);
-      });
+        console.log(err)
+      })
+  },
+
+  computed: {
+    fixTitle () {
+      if (this.scrollY >= 0) {
+        return ''
+      } else {
+        return this.keys[this.currentIndex]
+      }
+    }
+  },
+
+  mounted() {
+    this.$refs.scrollView.scrolling((y) => {
+      this.scrollY = y
+      if (y >= 0) {
+        this.currentIndex = 0
+        return
+      }
+
+      for (let i = 0; i < this.groupTops.length; i++) {
+        let preTop = this.groupTops[i]
+        let nextTop = this.groupTops[i+1]
+        if (-y > preTop && -y <= nextTop) {
+          this.currentIndex = i
+          // 用下一组标题的偏移位 + 当前滚出去的偏移位
+          let diffOffsetY = nextTop + y
+          let fixTitleOffsetY = 0
+          if (diffOffsetY > 0 && diffOffsetY <= this.fixTitleHeight) {
+            fixTitleOffsetY = diffOffsetY - this.fixTitleHeight
+          } else {
+            fixTitleOffsetY = 0
+          }
+          if (fixTitleOffsetY === this.fixTitleOffsetY) {
+            return
+          }
+          this.fixTitleOffsetY = fixTitleOffsetY
+          this.$refs.fixTitle.style.transform = `translateY(${fixTitleOffsetY}px)`
+          return
+        }
+      }
+      // 处理最后一个区域
+      this.currentIndex = this.groupTops.length - 1
+    })
   },
 
   methods: {
-    keyDown(index) {
+    _keyDown(index) {
       let offsetY = this.groupTops[index];
       this.$refs.scrollView.scrollTo(0, -offsetY, 200);
       this.currentIndex = index;
+    },
+
+    touchstart (e) {
+      // console.log(e.target.dataset.index);
+      let index = parseInt(e.target.dataset.index)
+      this._keyDown(index)
+      this.beginOffsetY = e.touches[0].pageY
+    },
+
+    touchmove (e) {
+      this.moveOffsetY = e.touches[0].pageY
+      let offsetY = (this.moveOffsetY - this.beginOffsetY) / e.target.offsetHeight
+      let index = parseInt(e.target.dataset.index) + Math.floor(offsetY)
+      if (index < 0) {
+        index = 0
+      } else if (index > this.keys.length - 1) {
+        index = this.keys.length - 1
+      }
+      this._keyDown(index)
+    },
+
+    gotoSinger(id) {
+      this.$router.push(`/singer/detail/${id}/singer`)
     }
   },
 
@@ -76,6 +152,12 @@ export default {
           this.groupTops.push(item.offsetTop);
         });
       });
+    },
+
+    fixTitle () {
+      this.$nextTick(() => {
+        this.fixTitleHeight = this.$refs.fixTitle.offsetHeight
+      })
     }
   }
 };
@@ -137,6 +219,17 @@ export default {
         text-shadow: 0 0 10px #000;
       }
     }
+  }
+  .fix-title {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    color: white;
+    @include font_size($font_medium);
+    @include bg_color();
   }
 }
 </style>

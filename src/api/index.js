@@ -19,6 +19,8 @@ export const getSongDetail = (data) => Network.mb_get('/song/detail', data)
 export const getSongLyric = (data) => Network.mb_get('/lyric', data)
 // 获取歌曲播放地址
 export const getSongURL = (data) => Network.mb_get('/song/url', data)
+// 获取歌手详情
+export const getArtistsDetail = (data) => Network.mb_get('/artists', data)
 // 获取热门歌手
 export const getHotArtists = () => {
     return new Promise((resolve, reject) => {
