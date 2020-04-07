@@ -15,7 +15,7 @@ import SubHeader from "../components/detail/SubHeader";
 import DetailTop from "../components/detail/DetailTop";
 import DetailBottom from "../components/detail/DetailBottom";
 import ScrollView from "../components/ScrollView";
-import { getPlayList, getAlbumDetail, getArtistsDetail } from "../api/index";
+import { getPlayList, getAlbumDetail, getArtistsDetail, getTopList } from "../api/index";
 
 export default {
   name: "Detail",
@@ -56,12 +56,26 @@ export default {
           console.log(error);
         });
     } else if (this.$route.params.type === 'singer') {
+      // 歌手歌单详情
       getArtistsDetail({id: this.$route.params.id})
       .then(data => {
            this.playlist = {
             name: data.artist.name,
             coverImgUrl: data.artist.picUrl,
             tracks: data.hotSongs
+          }
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    } else if (this.$route.params.type === 'rank') {
+      // 排行榜歌单详情
+      getTopList({idx: this.$route.params.id})
+      .then(data => {
+           this.playlist = {
+            name: data.playlist.name,
+            coverImgUrl: data.playlist.creator.backgroundUrl,
+            tracks: data.playlist.tracks
           }
       })
       .catch(error => {
