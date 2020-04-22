@@ -6,11 +6,14 @@ import router from './router/index'
 import store from './store/index'
 import VueLazyload from 'vue-lazyload'
 import VConsole from 'vconsole'
+import Loading from './plugin/loading/index'
 
 Vue.use(VueLazyload, {
   // 图片的占位图
   loading: require('./assets/images/loading.png')
 })
+
+Vue.use(Loading)
 
 const console = new VConsole()
 Vue.use(console)

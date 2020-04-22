@@ -37,6 +37,7 @@
 
 import { getTopListDetail } from '../api/index'
 import ScrollView from '../components/ScrollView'
+import Vue from 'vue'
 
 export default {
     name: 'Rank',
@@ -51,11 +52,14 @@ export default {
     },
 
     created() {
+      Vue.showLoading()
       getTopListDetail()
       .then(data => {
+        Vue.hiddenLoading()
         this.category = data
       })
       .catch(err => {
+        Vue.hiddenLoading()
         console.log(err)
       })
     },

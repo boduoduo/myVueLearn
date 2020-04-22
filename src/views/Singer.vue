@@ -38,6 +38,7 @@
 <script>
 import { getAllArtists } from "../api/index";
 import ScrollView from "../components/ScrollView";
+import Vue from 'vue'
 
 export default {
   name: "Singer",
@@ -59,12 +60,15 @@ export default {
   },
 
   created() {
+    Vue.showLoading()
     getAllArtists()
       .then(result => {
+        Vue.hiddenLoading()
         this.keys = result.keys
         this.list = result.list
       })
       .catch(err => {
+        Vue.hiddenLoading()
         console.log(err)
       })
   },

@@ -25,6 +25,8 @@ export const getArtistsDetail = data => Network.mb_get("/artists", data);
 export const getTopList = data => Network.mb_get("/top/list", data);
 // 搜索歌曲
 export const getSearchList = data => Network.mb_get("/search?type=1", data);
+// 搜索热门歌曲
+export const getSearchHot = data => Network.mb_get("/search/hot");
 // 获取榜单内容摘要
 export const getTopListDetail = () => {
   return new Promise((resolve, reject) => {

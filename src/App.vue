@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header :title="'网易云音乐'"></Header>
+    <MainHeader :title="'网易云音乐'"></MainHeader>
     <Tabbar></Tabbar>
     <router-view></router-view>
     <Player></Player>
@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import Header from './components/Header'
+import MainHeader from './components/recommend/MainHeader'
 import Tabbar from './components/Tabbar'
 import Player from './views/Player'
 
@@ -20,7 +20,7 @@ export default {
     };
   },
   components: {
-    Header,
+    MainHeader,
     Tabbar,
     Player
   },

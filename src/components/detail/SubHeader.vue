@@ -1,30 +1,25 @@
 <template>
-  <div class="header" @click="changeTheme">
-      <div class="header-left" @click.stop="back"></div>
-      <div class="header-title">{{title}}</div>
-      <div class="header-right"></div>
-  </div>
+  <Header class="header">
+      <div class="header-left" slot="left" @click.stop="back"></div>
+      <div class="header-title" slot="center">{{title}}</div>
+      <div class="header-right" slot="right"></div>
+  </Header>
 </template>
 
 <script>
+import Header from '../Header'
 export default {
     name: 'SubHeader',
-    data() {
-        return {
-            themes: ["theme","theme1","theme2"],
-            index: 0,
-        }
+    components: {
+        Header,
     },
     methods: {
-        changeTheme () {
-            this.index++
-            if (this.index>=this.themes.length) {
-                this.index = 0
-            }
-            document.documentElement.setAttribute("data-theme", this.themes[this.index])
-        },
-
         back () {
+            let num = 23223.3267
+            num.toFixed(2)
+            num = parseFloat(num)
+            num = num.toLocaleString()
+            console.log(num)
             window.history.back()
         }
     },
@@ -44,14 +39,7 @@ export default {
 @import '../../assets/css/mixin';
 
 .header {
-    position: relative;
     z-index: 999;
-    width: 100%;
-    height: 100px;
-    @include bg_color();
-    background-color: red;
-    display: flex;
-    justify-content: space-between;
     .header-left, .header-right {
         width: 84px;
         height: 84px;
