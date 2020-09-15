@@ -43,7 +43,8 @@ export default {
     name: 'Rank',
     data() {
       return {
-        category: {}
+        category: {},
+        picUrl: 'https://p1.music.126.net/DrRIg6CrgDfVLEph9SNh7w==/18696095720518497.jpg'
       }
     },
 
@@ -57,6 +58,7 @@ export default {
       .then(data => {
         Vue.hiddenLoading()
         this.category = data
+        console.log(data)
       })
       .catch(err => {
         Vue.hiddenLoading()
@@ -66,6 +68,7 @@ export default {
 
     methods: {
       selectedItem (id) {
+        console.log(JSON.stringify(id))
         this.$router.push(`/rank/detail/${id}/rank`)
       }
     },

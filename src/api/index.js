@@ -45,14 +45,14 @@ export const getTopListDetail = () => {
         { name: "云音乐ACG音乐榜", id: 22 },
         { name: "云音乐古典音乐榜", id: 24 }
       ],
-      globalList: [
-        { name: "美国Billboard周榜", id: 6 },
-        { name: "UK排行榜周榜", id: 5 },
-        { name: "Beatport全球电子舞曲榜", id: 21 },
-        { name: "日本Oricon周榜", id: 10 },
-        { name: "iTunes榜", id: 8 },
-        { name: "英国Q杂志中文版周榜", id: 29 }
-      ],
+      // globalList: [
+      //   { name: "美国Billboard周榜", id: 6 },
+      //   { name: "UK排行榜周榜", id: 5 },
+      //   { name: "Beatport全球电子舞曲榜", id: 21 },
+      //   { name: "日本Oricon周榜", id: 10 },
+      //   { name: "iTunes榜", id: 8 },
+      //   { name: "英国Q杂志中文版周榜", id: 29 }
+      // ],
       otherList: [
         { name: "KTV唛榜", id: 7 },
         { name: "法国 NRJ Vos Hits 周榜", id: 19 },
